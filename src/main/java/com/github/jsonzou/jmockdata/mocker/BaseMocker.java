@@ -28,7 +28,8 @@ public class BaseMocker<T> implements Mocker<T> {
     } else if (type instanceof GenericArrayType) {
       mocker = new ArrayMocker(type);
     } else if (type instanceof TypeVariable) {
-      mocker = new BaseMocker(mockConfig.globalConfig().getVariableType(((TypeVariable) type).getName()));
+      TypeVariable typeVariable = (TypeVariable) type;
+      mocker = new BaseMocker(mockConfig.globalConfig().getVariableTypeForClass((Class) typeVariable.getGenericDeclaration(), typeVariable.getName()));
     } else {
       mocker = new ClassMocker((Class) type, genericTypes);
     }

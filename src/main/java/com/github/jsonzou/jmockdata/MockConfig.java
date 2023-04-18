@@ -52,6 +52,10 @@ public class MockConfig {
    */
   private Map<String, Type> typeVariableCache = new HashMap<>(8);
   /**
+   * TypeVariable缓存for Class
+   */
+  private Map<Class<?>, Map<String, Type>> typeVariableCacheForClass = new HashMap<>(8);
+  /**
    * enum缓存
    */
   private Map<String, Enum[]> enumCache = new HashMap<>(4);
@@ -136,6 +140,26 @@ public class MockConfig {
     return this;
   }
 
+  public MockConfig handleVariableTypeForClass(Type type) {
+    if (type instanceof ParameterizedType) {
+      Class clazz = (Class) ((ParameterizedType) type).getRawType();
+      Map<String, Type> typeVariableMap = typeVariableCacheForClass.get(clazz);
+      if (typeVariableMap == null) {
+        typeVariableMap = new HashMap<>(8);
+        typeVariableCacheForClass.put(clazz, typeVariableMap);
+      }
+      Type[] types = ((ParameterizedType) type).getActualTypeArguments();
+      TypeVariable[] typeVariables = clazz.getTypeParameters();
+      if (typeVariables != null && typeVariables.length > 0) {
+        for (int index = 0; index < typeVariables.length; index++) {
+          typeVariableMap.put(typeVariables[index].getName(), types[index]);
+          handleVariableTypeForClass(types[index]);
+        }
+      }
+    }
+    return this;
+  }
+
   public boolean isEnabledCircle() {
     return this.enabledCircle;
   }
@@ -175,6 +199,14 @@ public class MockConfig {
 
   public Type getVariableType(String name) {
     return typeVariableCache.get(name);
+  }
+
+  public Type getVariableTypeForClass(Class<?> clazz, String name) {
+    Map<String, Type> typeVariableMap = typeVariableCacheForClass.get(clazz);
+    if (typeVariableMap != null) {
+      return typeVariableMap.get(name);
+    }
+    return null;
   }
 
   /**

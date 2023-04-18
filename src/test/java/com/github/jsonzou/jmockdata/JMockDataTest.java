@@ -6,6 +6,8 @@ import com.github.jsonzou.jmockdata.bean.*;
 import com.github.jsonzou.jmockdata.bean.circular.AXB;
 import com.github.jsonzou.jmockdata.bean.enums.DayEnum;
 import com.github.jsonzou.jmockdata.bean.enums.ErrorEnum;
+import com.github.jsonzou.jmockdata.bean.parameterizedType.PageBean;
+import com.github.jsonzou.jmockdata.bean.parameterizedType.ResponseBean;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
@@ -351,5 +353,17 @@ public class JMockDataTest {
     }
   }
 
+  /**
+   * 测试泛型
+   *
+   * @throws
+   * @author yinyg
+   * @date 2023/4/17
+   */
+  @Test
+  public void testParameterizedType() {
+    ResponseBean<PageBean<UserBean>> obj = JMockData.mock(new TypeReference<ResponseBean<PageBean<UserBean>>>(){});
+    System.out.println(JSON.toJSONString(obj));
+  }
 
 }

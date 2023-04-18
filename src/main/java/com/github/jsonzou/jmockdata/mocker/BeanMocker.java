@@ -119,7 +119,7 @@ public class BeanMocker implements Mocker<Object> {
             || clazz.isInterface()
             || clazz.isEnum()
             || clazz.isAnnotation()
-            || Modifier.isAbstract(clazz.getModifiers())
+//            || Modifier.isAbstract(clazz.getModifiers())
             || Modifier.isProtected(clazz.getModifiers())
             || Modifier.isPrivate(clazz.getModifiers())
             || Modifier.isInterface(clazz.getModifiers())
